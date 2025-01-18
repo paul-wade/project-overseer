@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "strict": true,
+    "noEmit": true,
+    "target": "es2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["jest", "@testing-library/jest-dom", "node"]
+  },
+  "include": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "jest.setup.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
