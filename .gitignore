@@ -1,0 +1,55 @@
+# Environment Files
+.env
+.env.local
+.env.development
+.env.production
+
+# Dependency Directories
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build Outputs
+build/
+dist/
+out/
+.next/
+
+# IDE and Editor Files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+logs
+*.log
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# Python Specific
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Azure Functions
+local.settings.json
+
+# Sensitive Configurations
+*.pem
+*.key
+*.cert
+
+# Miscellaneous
+.tmp/
+.temp/

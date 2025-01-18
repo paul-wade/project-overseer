@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "project-overseer"
+version = "0.1.0"
+description = "Autonomous AI-Powered Software Development Ecosystem"
+readme = "README.md"
+requires-python = ">=3.9"
+
+dependencies = [
+    "anthropic>=0.7.0",
+    "crewai>=0.1.0",
+    "pydantic>=2.5.0",
+    "python-dotenv>=1.0.0",
+    "typing-extensions>=4.9.0",
+    "prisma>=0.10.0",
+    "pinecone-client>=2.2.0",
+    "sentence-transformers>=2.2.0",
+    "pymongo>=4.3.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "mypy",
+    "black",
+    "flake8",
+    "isort",
+    "pre-commit",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
+[tool.black]
+line-length = 100
+target-version = ['py39']
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+ignore_missing_imports = true
+check_untyped_defs = true
