@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, createContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@/lib/utils';
+import { z } from 'zod';
 import { chatWithAgent, ChatInputSchema, AgentType } from '@/lib/anthropic';
 
 // Define agent types more strictly
@@ -42,6 +43,39 @@ const AudioContext = createContext<{
   toggleAudio: () => {}
 });
 
+// Mock AI agent interaction
+const AgentInteractionSchema = z.object({
+  message: z.string().min(1, "Message cannot be empty"),
+  agent: z.enum(['conceptualizer', 'architect', 'implementer', 'tester', 'deployer', 'monitor'])
+});
+
+// Simulated agent response generator
+const generateAgentResponse = (agent: AgentType, userMessage: string) => {
+  const agentPersonas = {
+    conceptualizer: [
+      "That's an interesting concept. Let me break down the key requirements.",
+      "I see potential challenges and opportunities in your approach.",
+      "Let's explore the core problem from multiple perspectives."
+    ],
+    architect: [
+      "I'll draft a high-level system design based on your input.",
+      "Here's how we can structure the solution for scalability.",
+      "Let's consider the architectural constraints and trade-offs."
+    ],
+    implementer: [
+      "I'm ready to translate the design into concrete code.",
+      "Here's a potential implementation strategy.",
+      "Let's discuss the technical implementation details."
+    ]
+  };
+
+  const responses = agentPersonas[agent] || agentPersonas.conceptualizer;
+  return {
+    message: responses[Math.floor(Math.random() * responses.length)],
+    agent: agent
+  };
+};
+
 export default function ChatPage() {
   const [isClient, setIsClient] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -64,23 +98,18 @@ export default function ChatPage() {
     setActiveSpeechBubble(activeSpeechBubble === agent ? null : agent);
   };
 
-  const { register, handleSubmit, reset, setValue } = useForm({
-    resolver: zodResolver(ChatInputSchema),
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    resolver: zodResolver(AgentInteractionSchema),
     defaultValues: {
       message: '',
       agent: selectedAgent
     }
   });
 
-  // Update hidden agent input when selectedAgent changes
-  useEffect(() => {
-    setValue('agent', selectedAgent);
-  }, [selectedAgent, setValue]);
-
   const onSubmit = async (data: { message: string; agent: AgentType }) => {
     if (!isClient) return;
 
-    setIsLoading(true);
+    // Add user message
     const userMessage: Message = { 
       id: `user-${Date.now()}`,
       text: data.message, 
@@ -89,8 +118,13 @@ export default function ChatPage() {
     };
     setMessages(prev => [...prev, userMessage]);
 
+    // Simulate agent response
+    setIsLoading(true);
     try {
-      const response = await chatWithAgent(data);
+      // Simulate async response
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const response = generateAgentResponse(data.agent, data.message);
       const agentMessage: Message = { 
         id: `agent-${Date.now()}`,
         text: response.message, 
@@ -98,6 +132,7 @@ export default function ChatPage() {
         agent: response.agent,
         timestamp: Date.now()
       };
+      
       setMessages(prev => [...prev, agentMessage]);
     } catch (error) {
       console.error('Chat error:', error);
@@ -282,6 +317,7 @@ export default function ChatPage() {
           <input 
             type="hidden" 
             {...register('agent')} 
+            value={selectedAgent}
           />
           <button
             type="submit"
